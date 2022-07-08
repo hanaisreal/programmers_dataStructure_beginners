@@ -3,7 +3,7 @@ import java.util.*;
 public class _3 {
     public int[] _3(int []arr) {
 
-        List<Integer> list = new arrayList<>(); //linkedList의 get은 O(n), arrayList의 get은 O(1)
+        List<Integer> list = new rrayList<>(); //linkedList의 get은 O(n), arrayList의 get은 O(1)
         list.add(arr[0]);
       for(int i = 0; i < arr.length-1; i++){
           if(arr[i] != arr[i+1])list.add(arr[i+1]);
