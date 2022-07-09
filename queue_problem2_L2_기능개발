@@ -1,0 +1,80 @@
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+public class _2 {
+    class Solution {
+        public int[] solution(int[] progresses, int[] speeds) {
+
+            //내 방식
+            /*
+            Queue<Integer> progressStack = new LinkedList<>();
+            Queue<Integer> speedStack = new LinkedList<>();
+            for(int i = 0; i < progresses.length; i++){
+                progressStack.offer(progresses[i]);
+                speedStack.offer(speeds[i]);
+            }
+
+            List<Integer> finishList = new LinkedList<>();
+            while(!progressStack.isEmpty()){
+                boolean firstFinish = false;
+                int finish = 0;
+                for(int i = 0; i < progressStack.size(); i++){
+                    if(progressStack.peek()+speedStack.peek() >= 100 && i == 0) {
+                        progressStack.poll();
+                        speedStack.poll();
+                        finish++;
+                        firstFinish = true;
+                    }else if(firstFinish && progressStack.peek()+speedStack.peek() >= 100){
+                        progressStack.poll();
+                        speedStack.poll();
+                        finish++;
+                    }
+                    else{
+                        int updateProgress = progressStack.peek() + speedStack.peek();
+                        int speed = speedStack.peek();
+                        progressStack.poll();
+                        speedStack.poll();
+                        progressStack.offer(updateProgress);
+                        speedStack.offer(speed);
+                        firstFinish = false;
+                    }
+                }
+                if(finish != 0) finishList.add(finish);
+            }
+            return finishList.stream().mapToInt(Integer::intValue).toArray();
+
+             */
+
+            //풀이방식
+            //[93,30,55] , [1,30,5]
+            //[7,3,9] 일이 걸린다
+            //[2,1]
+            Queue<Integer> queue = new LinkedList<>();
+            for(int i = 0; i < progresses.length; i++){
+                float p = progresses[i];  //decimal이 나오기 위해 int보다는 float로 계산
+                float s = speeds[i];
+                int days = (int)Math.ceil((100-p)/s);  //반올림하여 계산하기 위해 Math.ceil 사용
+                queue.offer(days);
+            }
+
+            Queue<Integer> answer = new LinkedList<>();
+            int d = queue.poll();
+            int count = 1;
+            while(!queue.isEmpty()){
+                int n = queue.poll();
+                if( d >= n){
+                    count++; continue;
+                }
+                answer.offer(count);
+                count = 1;
+                d = n;
+            }
+            answer.offer(count);
+            return answer.stream().mapToInt(Integer::intValue).toArray();
+        }
+
+
+    }
+}
