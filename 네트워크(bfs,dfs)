@@ -1,1 +1,31 @@
+import java.util.LinkedList;
+import java.util.Queue;
 
+public class _1방법2 {
+    public int solution(int n, int[][] computers) {
+        int answer = 0;
+        boolean[] visited = new boolean[n]; //이미 탐색한 노드인지 확인하는 배열
+
+        for(int i = 0; i < n; i++){
+            if(visited[i]) continue;
+            answer++; //연결되어 있는 노드는 첫 탐색 때 visited로 바뀌있어야한다. 그렇지 않다는 것은 새로운 네트워크라는 것
+            bfs(computers, visited, i);
+        }
+        return answer;
+    }
+
+    void bfs(final int[][] computers, boolean[] visited, int c){
+        Queue<Integer> q = new LinkedList<>();  //한 컴퓨터와 연결되어 있는 모든 컴퓨터를 넣기위해
+        q.offer(c); 
+        while(!q.isEmpty()){
+            int i = q.poll();  //q에있는 첫번째 컴퓨터를 꺼낸다
+            visited[i] = true;  
+            for(int j = 0; j < computers[i].length; j++){  //i 컴퓨터와 연결되어 있는 다른 컴퓨터 탐색
+                if(visited[j]) continue;  //이미 탐색된 것이면 넘어가고
+                if(computers[i][j] == 1) q.offer(j);  //연결되어 있으면 queue에 넣음.
+            }
+            
+            //이 for loop이 끝나도 q에 컴퓨터있으면 반복한다. 
+        }
+    }
+}
