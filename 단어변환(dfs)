@@ -1,0 +1,97 @@
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
+
+public class 단어변환 {
+    public int solution(String begin, String target, String[] words) {
+
+        //시도1: 전 단어와 현재단어와 비교해서 다른 알파벳이 1개이고, 이 알파벳의 인덱스가 같으면 pass,
+        //인덱스가 다르면 stack에 더해준다, target을 찾을때까지. 그러나 문제는 인덱스가 같아도 stack에 넣는 것이다.
+        /*int turns = 0;
+        Stack<String> stack = new Stack<>();
+        stack.push(begin);
+        while(true){
+            if(turns == words.length) {
+                stack.empty();
+                break;
+            }
+            String first = stack.peek();
+            String second = null;
+            int unMatch = 0;
+            int index = 1;
+            int unMatchIndex[] = new int[words.length];
+            for(int i = turns; i < words.length; i++){
+                for(int j = 0; j < begin.length(); j++){
+                    if(first.charAt(j) != words[i].charAt(j)) { //알파벳이 몇개나 안 맞는지 계산
+                        unMatch++;
+                        unMatchIndex[index-1] = j; //안 맞는 알파벳의 인덱스를 저장
+                    }
+                }
+                if(unMatch == 1 && words[i].equals(target)) break;  //found the target
+                else if(unMatch == 1 && unMatchIndex[index-1] == unMatchIndex[index] && index != 1) {
+                    index++;
+                    continue;}
+                else if(unMatch == 1) second = words[i];  //or else found the next similar word
+                index++;
+            }
+            if(second != null){
+                stack.push(second);
+                System.out.println(second);
+            }
+            turns++;
+        }
+        return stack.size();
+
+         */
+
+
+        //the right method
+        class Word{
+            String word;
+            int depth;
+            public Word(String word, int depth) {
+                this.word = word;
+                this.depth = depth;
+            }
+        }
+
+        if(!Arrays.asList(words).contains(target)) return 0;
+
+        Stack<Word> stack = new Stack<>();
+        stack.add(new Word(begin, 0));
+        Set<String> used = new HashSet<>();
+        while(!stack.isEmpty()){
+
+            Word now = stack.pop();
+            if(now.word.equals(target)) return now.depth;
+
+            for(String w: words){
+                //바꿀 수 있는 단어들만 stack에 넣는다. step도 확인 필요.
+                if(!changeable(now.word, w)) continue;
+                if(used.contains(w)) continue;
+
+                stack.push(new Word(w, now.depth+1));
+                used.add(w);
+
+            }
+        }
+
+        return 0;
+    }
+
+    public boolean changeable(String w1, String w2){
+        int len = Math.min(w1.length(), w2.length());
+        int count = 0;
+        for(int i = 0; i < len; i++){
+            if(w1.charAt(i) != w2.charAt(i)) count++;
+        }
+        return count == 1;
+    }
+
+    public static void main(String[] args) {
+        String[] words = {"hot","dot","dog","lot","log","cog"};
+        단어변환 test = new 단어변환();
+        test.solution("hit","cog",words);
+    }
+}
