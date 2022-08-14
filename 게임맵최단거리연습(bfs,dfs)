@@ -1,0 +1,60 @@
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class 맵최단거리연습 {  //내가 푼 것
+    class Location{
+        int x, y;
+        int steps;
+
+        Location(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+        Location(int x, int y, int steps){
+            this.x = x;
+            this.y = y;
+            this.steps = steps;
+        }
+
+        boolean equals(Location other){
+            return other.x==this.x && other.y==this.y;
+        }
+
+    }
+    public int solution(int[][] maps) {
+
+        int r = maps.length;
+        int c = maps[0].length;
+        Queue<Location> q = new LinkedList<>();
+        q.offer(new Location(0,0,1));
+        Location target = new Location(r-1,c-1);
+        boolean[][] visited = new boolean[r][c];
+
+        while(!q.isEmpty()){
+            Location now = q.poll();
+
+            if(now.equals(target)) return now.steps;
+            if(visited[now.x][now.y] == true) continue;
+
+            visited[now.x][now.y] = true;
+
+            //모든 방향으로 전진. 벽을 마주하거나 범위밖으로 나가지 않는 이상 q에 넣어준다.
+            if(now.x+1 < r && maps[now.x+1][now.y]!= 0) q.offer(new Location(now.x+1, now.y, now.steps+1));
+            if(now.x-1 >= 0 && maps[now.x-1][now.y]!= 0) q.offer(new Location(now.x-1, now.y, now.steps+1));
+            if(now.y+1 < c && maps[now.x][now.y+1]!= 0) q.offer(new Location(now.x, now.y+1, now.steps+1));
+            if(now.y-1 >= 0 && maps[now.x][now.y-1]!= 0) q.offer(new Location(now.x, now.y-1, now.steps+1));
+        }
+
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[][] map = {{1,0,1,1,1},{1,0,1,0,1},{1,0,1,1,1},{1,1,1,0,1},{0,0,0,0,1}};
+        맵최단거리연습 test = new 맵최단거리연습();
+        test.solution(map);
+
+
+
+    }
+}
