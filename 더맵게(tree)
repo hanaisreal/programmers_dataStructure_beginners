@@ -1,0 +1,26 @@
+import java.util.*;
+
+public class 더맵게 {
+    public int solution(int[] scoville, int K) {
+        int answer = 0;
+
+        Queue<Integer> q = new PriorityQueue<>();
+        for(int s: scoville) q.offer(s);
+
+        while(q.size() >= 2 && q.peek() < K){
+            int q1 = q.poll();
+            int q2 = q.poll();
+            int q3 = q1 + q2*2;
+            q.offer(q3);
+            answer++;
+        }
+        if(q.peek() < K) return -1;
+        return answer;
+    }
+
+    public static void main(String[] args) {
+        더맵게 test = new 더맵게();
+        int[] scoville = {1, 3, 2, 9, 10, 12};
+        test.solution(scoville,7);
+    }
+}
