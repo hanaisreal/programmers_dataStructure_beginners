@@ -1,0 +1,60 @@
+
+import java.util.Stack;
+
+public class 게임맵최단거리 {
+    class Location{
+        int x,y;
+        Location(int x, int y){this.x = x; this.y = y;}
+
+        public boolean equals(Location other){
+            return this.x == other.x && this.y == other.y;
+        }
+
+        Location left(){ return new Location(x-1, y);}
+        Location right(){ return new Location(x+1,y);}
+        Location up(){ return new Location(x, y+1);}
+        Location down(){ return new Location(x, y-1);}
+    }
+    class Position{
+        int steps; //리턴할 때 걸음수 필요.
+        Location location;
+        public Position(Location location,int steps) {
+            this.steps = steps;
+            this.location = location;
+        }
+    }
+    public int solution(int[][] maps) {
+
+        Location target = new Location(maps.length-1, maps[0].length-1);
+        Stack<Position> s = new Stack<>();
+        s.add(new Position(new Location(0,0), 1));
+
+        boolean[][] visited = new boolean[maps.length][maps[0].length];
+
+
+        while(!s.isEmpty()){
+            Position now = s.pop();
+
+            if(now.location.x < 0) continue; //맵 밖
+            if(now.location.x >= maps.length) continue;
+            if(now.location.y < 0) continue;
+            if(now.location.y >= maps[0].length) continue;
+            if(maps[now.location.x][now.location.y] == 0) continue;  //벽
+            if(visited[now.location.x][now.location.y] == true) continue; // 이미 방문
+
+            visited[now.location.x][now.location.y] = true;
+
+            //최종 위치이면 리턴 걸음수, 즉 위치와 걸음수 변수 필요.
+            if(now.location.equals(target)){
+                return now.steps;
+            }
+
+            s.push(new Position(now.location.left(), now.steps+1));
+            s.push(new Position(now.location.right(), now.steps+1));
+            s.push(new Position(now.location.up(), now.steps+1));
+            s.push(new Position(now.location.down(), now.steps+1));
+        }
+
+        return -1;
+    }
+}
