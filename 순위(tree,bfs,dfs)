@@ -1,0 +1,60 @@
+import java.util.*;
+
+public class 순위 {
+    class Node{
+        int n;
+        int win = 0, lose = 0;
+        boolean visit = false;
+
+        List<Node>links = new LinkedList<>(); ////방향성을 가진 그래프를 만들것
+        Node(int n){
+            this.n = n;
+        }
+    }
+    public int solution(int n, int[][] results){
+
+        //list에 선수 넣어주기
+        List<Node> list = new ArrayList<>();
+        for(int i = 0; i < n; i++) list.add(new Node(i+1));
+        //연결관계 넣어주기
+        for(int[] result: results){
+            Node winner = list.get(result[0]-1);
+            Node loser = list.get(result[1]-1);
+            winner.links.add(loser); //이긴사람 쪽에서만 진 선수를 넣어줌으로써 한 방향성을 가진다.
+
+        }
+
+        //한 선수마다 돌아다니면서 이겼을 경우를 기준으로 진성수를 찾아낸다
+        for(Node winner: list){
+            //한번 돌았을 때 visit이 true로 되어 있게 때문에 다 false로 변하는 과정이 필요
+            for(Node node: list) { node.visit = false;}
+
+            Queue<Node> queue = new LinkedList<>();
+            queue.offer(winner);
+            winner.visit = true; //첫번째로 넣은 노드는 수동으로 visit을 바꾸어줘야함.
+
+            while(!queue.isEmpty()){
+                Node now = queue.poll();
+
+                for(Node loser: now.links){
+                    if(loser.visit) continue;
+                    loser.visit = true;
+
+                    winner.win += 1;
+                    loser.lose += 1;
+
+                    queue.offer(loser);
+
+                }
+            }
+        }
+
+        int answer = 0;
+        //자신을 제외한 n-1번 경기를 하면 모든 사람과 경기를 했기 때문에 결과를 알 수 있다.
+        for(Node node: list) {
+            if(node.win + node.lose == n-1) answer++;  
+        }
+        return answer;
+    }
+
+}
